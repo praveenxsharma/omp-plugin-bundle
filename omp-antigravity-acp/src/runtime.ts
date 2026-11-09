@@ -36,8 +36,8 @@ import { labeled } from './labels.ts'
 import { JsonRpcClosedError, JsonRpcRemoteError } from './jsonrpc.ts'
 import { McpBridge, type BridgeCallRequest, type BridgeContent, type BridgeTool, type BridgeToolResult } from './mcp-bridge.ts'
 import {
-  assertSupportedAgyVersion, BRIDGE_AGENT, checkUnlock, defaultPatchScript, GPT_OSS_CONTEXT_WINDOW, LOCKED_CONTEXT_WINDOW,
-  readVersion, resolveAgyBinary, syncOAuthToken, UNLOCKED_CONTEXT_WINDOW, type CommandRunner, type PreflightResult,
+  assertSupportedAgyVersion, BRIDGE_AGENT, checkUnlock, defaultPatchScript, LOCKED_CONTEXT_WINDOW,
+  nativeContextWindow, readVersion, resolveAgyBinary, syncOAuthToken, UNLOCKED_CONTEXT_WINDOW, type CommandRunner, type PreflightResult,
 } from './preflight.ts'
 import { groupForModel, isWeeklyBucket, QuotaReader, resolveModelQuota, type QuotaSnapshot } from './quota.ts'
 import { RouteHealth, type RouteHealthSnapshot } from './route-health.ts'
@@ -257,14 +257,14 @@ export class AntigravityRuntime implements AccountAdmin {
   contextWindow(): number {
     const configured = this.configuredContextWindow()
     if (configured > 0) return configured
-    return this.primaryPreflight()?.unlock.status === 'unlocked' ? UNLOCKED_CONTEXT_WINDOW : LOCKED_CONTEXT_WINDOW
+    return this.primaryPreflight()?.unlock.status === 'locked' ? LOCKED_CONTEXT_WINDOW : UNLOCKED_CONTEXT_WINDOW
   }
 
   /**
    * Declared context window of one family: a global default, narrowed by every
    * account that can serve the model. An account may only shrink the window,
-   * never widen it beyond the global value. Claude 5.5 shares the 1M pool when
-   * the binary is unlocked; GPT-OSS 120B keeps its own 128K-class window.
+   * never widen it beyond the global value. Gemini 3.8 / 4 Argon and Claude 5.5
+   * are 1,048,576 unless the binary is known locked; GPT-OSS 120B stays 131,072.
    * @param model - family id.
    * @returns tokens.
    */
@@ -279,10 +279,12 @@ export class AntigravityRuntime implements AccountAdmin {
   private baseContextWindow(model: string): number {
     const configured = this.configuredContextWindow()
     if (configured > 0) return configured
-    if (model.startsWith('gpt-oss')) return GPT_OSS_CONTEXT_WINDOW
+    const native = nativeContextWindow(model)
+    if (model.startsWith('gpt-oss')) return native
     const discovered = this.catalog.maxTokensFor(model)
-    const ceiling = this.primaryPreflight()?.unlock.status === 'unlocked' ? UNLOCKED_CONTEXT_WINDOW : LOCKED_CONTEXT_WINDOW
-    return discovered !== undefined && discovered > 0 ? Math.min(discovered, ceiling) : ceiling
+    const ceiling = this.primaryPreflight()?.unlock.status === 'locked' ? LOCKED_CONTEXT_WINDOW : UNLOCKED_CONTEXT_WINDOW
+    const preferred = discovered !== undefined && discovered > 0 ? discovered : native
+    return Math.min(preferred, ceiling)
   }
 
   /**

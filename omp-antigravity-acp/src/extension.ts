@@ -15,7 +15,7 @@ import { FALLBACK_MODELS } from './catalog.ts'
 import { Config, current, type AccountProfile, type Config as PluginConfig } from './config.ts'
 import { CONFIG_VERSION, migrateConfig } from './migrate.ts'
 import { ompImageResolver, streamGenerate, toGenerateOptions, type StreamCallOptions, type StreamContext, type StreamModel } from './omp-stream.ts'
-import { defaultHome } from './preflight.ts'
+import { defaultHome, NATIVE_MAX_OUTPUT } from './preflight.ts'
 import { AntigravityRuntime } from './runtime.ts'
 import { createAcpSpawner, createCommandRunner } from './spawn.ts'
 
@@ -51,7 +51,7 @@ function modelRow(id: string, name: string, contextWindow: number, reasoning: bo
     input: ['text', 'image'] as ('text' | 'image')[],
     cost: ZERO_COST,
     contextWindow,
-    maxTokens: Math.min(64_000, contextWindow),
+    maxTokens: Math.min(NATIVE_MAX_OUTPUT, contextWindow),
   }
 }
 

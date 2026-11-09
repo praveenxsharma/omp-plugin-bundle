@@ -67,7 +67,7 @@ export interface Config {
    * advertises. Empty offers every advertised family.
    */
   visibleModels: string[]
-  /** Declared context window in tokens; 0 selects 1,048,576 for an unlocked binary and 256,000 otherwise. */
+  /** Declared context window in tokens; `0` uses the per-model native window (1,048,576 for Gemini/Claude, 131,072 for GPT-OSS) unless the binary is known locked at 256,000. */
   contextWindow: number
   /** Effort applied when a request carries none. */
   defaultEffort: Effort

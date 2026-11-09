@@ -23,8 +23,16 @@ export const DEFAULT_SEEDED_CONTEXT_WINDOW = '512K';
 export const LOCKED_CONTEXT_WINDOW = 256_000;
 /** Physical context window of the Gemini 4, Gemini 3.8, and Claude 5.5 families. */
 export const UNLOCKED_CONTEXT_WINDOW = 1_048_576;
-/** GPT-OSS 120B keeps its own 128K-class window and is not covered by the unlock. */
 export const GPT_OSS_CONTEXT_WINDOW = 131_072;
+/** Output cap advertised for Gemini 3.8 / 4 and Claude 5.5. */
+export const NATIVE_MAX_OUTPUT = 65_536;
+/**
+ * Native input window of one family, before the locked-binary ceiling.
+ * @param model - catalog family id.
+ */
+export function nativeContextWindow(model) {
+    return model.startsWith('gpt-oss') ? GPT_OSS_CONTEXT_WINDOW : UNLOCKED_CONTEXT_WINDOW;
+}
 function splitPathDirs(env, platform) {
     const raw = env.PATH ?? env.Path ?? '';
     const sep = platform === 'win32' ? ';' : delimiter;

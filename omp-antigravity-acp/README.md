@@ -45,15 +45,15 @@ omp plugin install github:praveenxsharma/dsh-plugin-bundle
 
 Restart OMP. Select a model in the **antigravity** group, for example `antigravity/gemini-4-argon`. Thinking levels: Low / Medium / High (`--thinking`).
 
-Install does not patch `agy`. Default context stays 256K. For ~1M, use [`agy-context-unlock`](../agy-context-unlock): put `agy-patch.py` at `~/.gemini/antigravity/tools/agy-patch.py` (Windows: `%USERPROFILE%\.gemini\antigravity\tools\agy-patch.py`). On the next start, `autoPatch` runs it if present. After `agy` upgrades, the plugin re-checks.
+Install does not patch `agy`. Auto context is the model's native window: 1,048,576 for Gemini 3.8 / 4 Argon and Claude 5.5, 131,072 for GPT-OSS. Output cap is 65,536. If the binary is known locked, Gemini/Claude clamp to 256,000. Optional unlock: [`agy-context-unlock`](../agy-context-unlock) — put `agy-patch.py` at `~/.gemini/antigravity/tools/agy-patch.py` (Windows: `%USERPROFILE%\.gemini\antigravity\tools\agy-patch.py`).
 
-| Model | Context | Thinking |
-|---|---|---|
-| Gemini 4 Argon | 1,048,576 unlocked / 256,000 locked | Low / Medium / High |
-| Gemini 3.8 Flash | 1,048,576 unlocked / 256,000 locked | Low / Medium / High |
-| Claude Opus 5.5 | 1,048,576 unlocked / 256,000 locked | Low / Medium / High |
-| Claude Sonnet 5.5 | 1,048,576 unlocked / 256,000 locked | Low / Medium / High |
-| GPT-OSS 120B (Medium) | 131,072 | Medium (fixed) |
+| Model | Context | Max out | Thinking |
+|---|---|---|---|
+| Gemini 4 Argon | 1,048,576 (256,000 if locked) | 65,536 | Low / Medium / High |
+| Gemini 3.8 Flash | 1,048,576 (256,000 if locked) | 65,536 | Low / Medium / High |
+| Claude Opus 5.5 | 1,048,576 (256,000 if locked) | 65,536 | Low / Medium / High |
+| Claude Sonnet 5.5 | 1,048,576 (256,000 if locked) | 65,536 | Low / Medium / High |
+| GPT-OSS 120B (Medium) | 131,072 | 65,536 | Medium (fixed) |
 
 Live roster follows ACP `session/new`.
 

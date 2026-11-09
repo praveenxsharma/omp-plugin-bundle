@@ -12,7 +12,7 @@ import { FALLBACK_MODELS } from "./catalog.js";
 import { Config, current } from "./config.js";
 import { CONFIG_VERSION, migrateConfig } from "./migrate.js";
 import { ompImageResolver, streamGenerate, toGenerateOptions } from "./omp-stream.js";
-import { defaultHome } from "./preflight.js";
+import { defaultHome, NATIVE_MAX_OUTPUT } from "./preflight.js";
 import { AntigravityRuntime } from "./runtime.js";
 import { createAcpSpawner, createCommandRunner } from "./spawn.js";
 const ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 };
@@ -45,7 +45,7 @@ function modelRow(id, name, contextWindow, reasoning) {
         input: ['text', 'image'],
         cost: ZERO_COST,
         contextWindow,
-        maxTokens: Math.min(64_000, contextWindow),
+        maxTokens: Math.min(NATIVE_MAX_OUTPUT, contextWindow),
     };
 }
 /**
