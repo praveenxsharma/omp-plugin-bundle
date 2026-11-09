@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Antigravity Model Provider (ACP)",
+    "description": "OMP primary model provider driving the local official Antigravity CLI (`agy acp`) over ACP v1. OMP owns tools, permissions, compaction, and subagents."
+  }
+}

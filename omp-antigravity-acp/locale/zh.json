@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Antigravity 模型接入（ACP）",
+    "description": "OMP 主模型提供方：经 ACP v1 驱动本地官方 Antigravity CLI（`agy acp`）。工具、权限、压缩与子代理由 OMP 负责。"
+  }
+}

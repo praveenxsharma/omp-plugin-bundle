@@ -1,0 +1,23 @@
+{
+  "name": "omp-antigravity-acp",
+  "version": "0.4.0",
+  "description": "OMP primary model provider driving the local official Antigravity CLI (`agy acp`) over ACP v1.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/praveenxsharma/dsh-plugin-bundle.git"
+  },
+  "homepage": "https://github.com/praveenxsharma/dsh-plugin-bundle/tree/main/omp-antigravity-acp#readme",
+  "omp": {
+    "extensions": [
+      "./omp-antigravity-acp/lib/extension.js"
+    ]
+  },
+  "files": [
+    "omp-antigravity-acp/lib",
+    "omp-antigravity-acp/README.md",
+    "omp-antigravity-acp/LICENSE",
+    "agy-context-unlock"
+  ]
+}
