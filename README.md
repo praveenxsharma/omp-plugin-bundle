@@ -18,7 +18,7 @@ omp plugin link ./omp-antigravity-acp
 Or from this GitHub repo:
 
 ```sh
-omp plugin install github:praveenxsharma/dsh-plugin-bundle
+omp plugin install github:praveenxsharma/omp-plugin-bundle
 ```
 
 ACP docs: [Agent Client Protocol](https://agentclientprotocol.com/get-started/introduction). `agy acp` product docs: [Antigravity CLI ACP](https://antigravity.google/docs/cli/acp/).
