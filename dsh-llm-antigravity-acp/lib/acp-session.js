@@ -10,7 +10,7 @@
  * @module dsh-llm-antigravity-acp/acp-session
  */
 import { randomBytes } from 'node:crypto';
-import { LlmError } from '@deepseek-ai/dsh-llm';
+import { LlmError } from "./host-types.js";
 import { bridgeSystemPrompt, MCP_SERVER_NAME } from "./history.js";
 import { labeled } from "./labels.js";
 import { recordReportedToolCall } from "./tool-bridge.js";

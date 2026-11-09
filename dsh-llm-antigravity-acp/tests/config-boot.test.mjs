@@ -232,7 +232,7 @@ test('a request with no account fails with AUTH and a message that says what to 
     collect(runtime.stream({ provider: 'antigravity', model: 'gemini-4-argon', sessionId: 'S-empty', messages: [sys, user('u1', 'hello')] })),
     error => {
       assert.equal(error.code, 'AUTH')
-      assert.equal(error.message, '[未登录] 没有可用的 Antigravity 账号，请在设置页添加账号或使用本机登录。')
+      assert.equal(error.message, '[not signed in] No Antigravity account is available. Run /agy-login or /agy-accounts add <id>.')
       return true
     },
   )

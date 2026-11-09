@@ -11,8 +11,8 @@
  * @module dsh-llm-antigravity-acp/conversation
  */
 
-import { LlmError, ToolCallId } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, StreamChunk, TokenUsage } from '@deepseek-ai/dsh-llm'
+import { LlmError, ToolCallId } from './host-types.ts'
+import type { ContentBlock, StreamChunk, TokenUsage } from './host-types.ts'
 import type { AcpPromptResult, AcpSessionUpdate } from './acp-process.ts'
 import type { BridgeTool, BridgeToolResult } from './mcp-bridge.ts'
 import { AGENT_TOOL_PREFIX, CALL_TOOL_NAME } from './history.ts'
@@ -105,7 +105,7 @@ export type TurnEvent =
  */
 export function degradedRouteError(): LlmError {
   return new LlmError(
-    labeled('DEGRADED_ROUTE', '上游把这次回答分到了降级线路，已在原会话重新生成。'),
+    labeled('DEGRADED_ROUTE', 'Upstream routed this answer onto a degraded fallback; regenerating in the same session.'),
     'DEGRADED_ROUTE',
     { providerRetryAfterMs: 1_000 },
   )
@@ -118,7 +118,7 @@ export function degradedRouteError(): LlmError {
  */
 export function degradedExhaustedError(): LlmError {
   return new LlmError(
-    labeled('DEGRADED_ROUTE_EXHAUSTED', '上游连续把这次回答分到了降级线路；本次工具调用没有执行，请稍后重试。'),
+    labeled('DEGRADED_ROUTE_EXHAUSTED', 'Upstream kept routing this answer onto a degraded fallback; this tool call was not executed. Retry later.'),
     'DEGRADED_ROUTE_EXHAUSTED',
   )
 }

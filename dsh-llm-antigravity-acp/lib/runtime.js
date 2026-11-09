@@ -9,7 +9,7 @@
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { basename, join } from 'node:path';
-import { LlmError } from '@deepseek-ai/dsh-llm';
+import { LlmError } from "./host-types.js";
 import { AcpProcess } from "./acp-process.js";
 import { applyModelAndEffort, detachBridge, freshReanswer, historyPrefixIntact, isOwnMessage, MAIN_PURPOSE, mountBridge, pendingInput, permissionState, planPrompt, } from "./acp-session.js";
 import { AccountPool, accountProfileOf, accountVisibleModels, buildLayouts, ensureLayout, familyForModel, loginCommand, pluginHome, proxyUrlFromEnv, readAccountEmail, SYSTEM_ACCOUNT_ID, TRANSIENT_COOLDOWN_MS, } from "./accounts.js";
@@ -36,7 +36,7 @@ export const DEFAULT_RELAY_AFTER_MS = 85_000;
 /** Automatic re-answers granted for one identical request before a degraded answer is delivered as it is. */
 const MAX_REANSWERS_PER_REQUEST = 2;
 /** Failure text of a provider whose account list is empty, which only the settings page can fix. */
-const NO_ACCOUNT_MESSAGE = '没有可用的 Antigravity 账号，请在设置页添加账号或使用本机登录。';
+const NO_ACCOUNT_MESSAGE = 'No Antigravity account is available. Run /agy-login or /agy-accounts add <id>.';
 const CONTINUE_PROMPT = 'Continue exactly where your previous output stopped. Do not repeat any earlier text.';
 const REROLL_CONTINUATION_PROMPT = '[HARNESS_NOTICE] Your previous attempt was discarded before reaching the user because upstream routed it to a degraded fallback node without executing any tools. Disregard any prior unexecuted draft, inspect the full context and workspace with your tools as needed, and complete my latest request above from scratch.';
 /** Owner of the ACP processes, the MCP bridge, and every conversation. */
@@ -1768,8 +1768,10 @@ export class AntigravityRuntime {
                 const image = await this.host.readImage(block);
                 if (image !== undefined)
                     items.push({ type: 'image', data: image.data, mimeType: image.mimeType });
-                else
-                    items.push({ type: 'text', text: `[image ${block.attachment.attachmentId} unavailable]` });
+                else {
+                    const id = 'attachment' in block && block.attachment !== undefined ? block.attachment.attachmentId : 'inline';
+                    items.push({ type: 'text', text: `[image ${id} unavailable]` });
+                }
             }
             else {
                 const rendered = renderTranscript([{ role: 'user', content: [block] }]);

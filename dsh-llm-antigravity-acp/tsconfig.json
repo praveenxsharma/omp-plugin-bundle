@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2023",
+    "lib": ["es2024"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "rootDir": "src",
@@ -18,15 +19,7 @@
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
     "experimentalDecorators": false,
-    "types": ["node"],
-    "typeRoots": ["node_modules/@types"],
-    "paths": {
-      "@deepseek-ai/cordis": ["./node_modules/@deepseek-ai/cordis/lib/types/index.d.ts"],
-      "@deepseek-ai/schemastery": ["./node_modules/@deepseek-ai/schemastery/lib/types/index.d.ts"],
-      "@deepseek-ai/dsh-llm": ["./node_modules/@deepseek-ai/dsh-llm/lib/types/index.d.ts"],
-      "@deepseek-ai/dsh-subprocess": ["./node_modules/@deepseek-ai/dsh-subprocess/lib/types/index.d.ts"],
-      "@deepseek-ai/dsh-typert-protocol": ["./node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/index.d.ts"]
-    }
+    "types": ["node"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"]
 }

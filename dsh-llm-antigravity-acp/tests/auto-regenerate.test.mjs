@@ -148,7 +148,7 @@ test('C1 a degraded end_turn fails the step with DEGRADED_ROUTE, holds the answe
   assert.ok(error !== undefined, 'the degraded attempt must fail the step instead of being re-rolled in place')
   assert.equal(error.code, 'DEGRADED_ROUTE', 'the failure asks the harness retry layer for another request, not a quota story')
   assert.equal(error.failure?.providerRetryAfterMs, 1000, 'the request is retried about a second later')
-  assert.ok(error.message.startsWith('[自动重答]'), `the message announces the automatic re-answer: ${error.message}`)
+  assert.ok(error.message.startsWith('[auto re-answer]'), `the message announces the automatic re-answer: ${error.message}`)
   assert.equal(textOf(chunks), '', 'the held answer of the degraded attempt never reaches the transcript')
 
   await wait(250)
@@ -168,7 +168,7 @@ test('C1b a degraded end_turn that already streamed reasoning still fails with D
   assert.ok(error !== undefined, 'a degraded answer with thinking must fail the step too')
   assert.equal(error.code, 'DEGRADED_ROUTE')
   assert.equal(error.failure?.providerRetryAfterMs, 1000)
-  assert.ok(error.message.startsWith('[自动重答]'), `the message announces the automatic re-answer: ${error.message}`)
+  assert.ok(error.message.startsWith('[auto re-answer]'), `the message announces the automatic re-answer: ${error.message}`)
   assert.match(reasoningOf(chunks), /Checking the quota handler\./, 'reasoning streamed before the verdict may stay')
 })
 
@@ -327,7 +327,7 @@ test('C5 a degraded tool gate that survives two re-answers fails with DEGRADED_R
   const third = await failedStep(attempt())
   assert.ok(third.error !== undefined, 'the exhausted gate fails the step')
   assert.equal(third.error.code, 'DEGRADED_ROUTE_EXHAUSTED', 'an unverified tool call is never handed to the harness')
-  assert.ok(third.error.message.startsWith('[降智未恢复]'), `the message states the abort: ${third.error.message}`)
+  assert.ok(third.error.message.startsWith('[degraded route]'), `the message states the abort: ${third.error.message}`)
   assert.deepEqual(callsOf(third.chunks), [], 'no tool call reached the harness')
   assert.equal(prompts().length, 3, 'the plugin stops asking after two re-answers')
 })

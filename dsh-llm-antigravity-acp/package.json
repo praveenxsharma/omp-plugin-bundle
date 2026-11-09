@@ -1,13 +1,13 @@
 {
-  "name": "dsh-llm-antigravity-acp",
+  "name": "omp-antigravity-acp",
   "version": "0.4.0",
-  "description": "DeepSeek Harness primary model provider driving the local official Antigravity CLI (`agy acp`) over ACP v1 with DSH-owned tools; exposes Gemini and Claude models with per-model context, reasoning efforts, and lock-free subagent concurrency.",
+  "description": "OMP primary model provider driving the local official Antigravity CLI (`agy acp`) over ACP v1. Credentials stay in the official process; OMP owns tools, permissions, compaction, and subagents.",
   "keywords": [
-    "dsh",
-    "dsh-plugin",
-    "dsh-bundle",
+    "omp",
+    "omp-plugin",
     "antigravity",
     "acp",
+    "agy",
     "gemini",
     "claude",
     "llm-provider"
@@ -23,56 +23,41 @@
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
-    "./client": "./lib/client.js",
-    "./package.json": "./package.json",
-    "./locale/*.json": "./locale/*.json"
+    "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=22.19",
-    "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+    "node": ">=22.19"
   },
-  "dsh": {
-    "bundle": {
-      "patch": "./cordis.patch.yml"
-    },
-    "client": {
-      "platform": "web",
-      "inject": [
-        "@deepseek-ai/dsh-client-ui-slots",
-        "@deepseek-ai/dsh-client-ui-settings",
-        "@deepseek-ai/dsh-client-ui-model-selection",
-        "@deepseek-ai/dsh-client-ui-chat",
-        "@deepseek-ai/dsh-client-ui-workspace",
-        "@deepseek-ai/dsh-api-session-controller",
-        "@deepseek-ai/dsh-api-remotes"
-      ]
-    }
+  "omp": {
+    "extensions": [
+      "./lib/extension.js"
+    ]
   },
   "files": [
     "lib",
-    "locale",
-    "cordis.patch.yml",
+    "src",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "node scripts/build.mjs --check",
-    "test": "node --test --test-concurrency=1 tests/*.test.mjs"
+    "test": "node --test --test-concurrency=1 tests/runtime.test.mjs tests/accounts.test.mjs tests/auto-regenerate.test.mjs tests/config-boot.test.mjs tests/config-migration.test.mjs tests/cloudcode.test.mjs tests/degrade-fingerprint.test.mjs tests/failover-classification.test.mjs tests/model-visibility.test.mjs tests/multi-account.test.mjs tests/pool-exhausted.test.mjs tests/quota-focus.test.mjs tests/remote-configure.test.mjs tests/usage-merge.test.mjs"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "*",
-    "@deepseek-ai/dsh-llm": "*",
-    "@deepseek-ai/dsh-subprocess": "*",
-    "@deepseek-ai/dsh-typert-protocol": "*",
-    "@deepseek-ai/schemastery": "*"
+    "@oh-my-pi/pi-ai": ">=18",
+    "@oh-my-pi/pi-coding-agent": ">=18"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-subprocess": {
+    "@oh-my-pi/pi-ai": {
       "optional": true
     },
-    "@deepseek-ai/dsh-typert-protocol": {
+    "@oh-my-pi/pi-coding-agent": {
       "optional": true
     }
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
   }
 }

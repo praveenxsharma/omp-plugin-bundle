@@ -10,7 +10,7 @@
  * deadline are relayed through the `dsh_await_result` tool.
  * @module dsh-llm-antigravity-acp/conversation
  */
-import { LlmError, ToolCallId } from '@deepseek-ai/dsh-llm';
+import { LlmError, ToolCallId } from "./host-types.js";
 import { AGENT_TOOL_PREFIX, CALL_TOOL_NAME } from "./history.js";
 import { labeled } from "./labels.js";
 import { AsyncQueue, deferred } from "./util.js";
@@ -82,7 +82,7 @@ export const CALL_TOOL = {
  * @returns the tagged failure with the harness retry hint.
  */
 export function degradedRouteError() {
-    return new LlmError(labeled('DEGRADED_ROUTE', '上游把这次回答分到了降级线路，已在原会话重新生成。'), 'DEGRADED_ROUTE', { providerRetryAfterMs: 1_000 });
+    return new LlmError(labeled('DEGRADED_ROUTE', 'Upstream routed this answer onto a degraded fallback; regenerating in the same session.'), 'DEGRADED_ROUTE', { providerRetryAfterMs: 1_000 });
 }
 /**
  * Failure that ends a step whose degraded tool call never recovered within the
@@ -90,7 +90,7 @@ export function degradedRouteError() {
  * @returns the terminal failure.
  */
 export function degradedExhaustedError() {
-    return new LlmError(labeled('DEGRADED_ROUTE_EXHAUSTED', '上游连续把这次回答分到了降级线路；本次工具调用没有执行，请稍后重试。'), 'DEGRADED_ROUTE_EXHAUSTED');
+    return new LlmError(labeled('DEGRADED_ROUTE_EXHAUSTED', 'Upstream kept routing this answer onto a degraded fallback; this tool call was not executed. Retry later.'), 'DEGRADED_ROUTE_EXHAUSTED');
 }
 /**
  * Whether a failure asks for (or reports the end of) an automatic re-answer.

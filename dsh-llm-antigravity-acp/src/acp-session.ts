@@ -11,8 +11,8 @@
  */
 
 import { randomBytes } from 'node:crypto'
-import { LlmError } from '@deepseek-ai/dsh-llm'
-import type { RequestMessage } from '@deepseek-ai/dsh-llm'
+import { LlmError } from './host-types.ts'
+import type { RequestMessage } from './host-types.ts'
 import type { AcpConfigOption, AcpPermissionOutcome, AcpPermissionRequest, AcpProcess, AcpSessionListener } from './acp-process.ts'
 import type { Effort } from './config.ts'
 import type { AcpTurn } from './conversation.ts'

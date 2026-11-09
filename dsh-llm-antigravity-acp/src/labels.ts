@@ -1,35 +1,34 @@
 /**
- * Short Chinese label per stable failure code, prefixed onto messages that
- * reach the transcript so a bare English code is readable at a glance.
+ * Short label per stable failure code, prefixed onto messages that reach the
+ * transcript so a bare code is readable at a glance.
  */
 
 /** Code → short label. Unknown codes stay unlabelled. */
 const FAILURE_LABELS: Readonly<Record<string, string>> = {
-  RATE_LIMIT: '频率限制',
-  QUOTA: '额度用尽',
-  AUTH: '未登录',
-  CONTEXT_WINDOW_EXCEEDED: '上下文超限',
-  TIMEOUT: '超时',
-  TRANSPORT: '连接中断',
-  SERVER: '服务端错误',
-  REFUSAL: '请求被拒绝',
-  MAX_SESSIONS: '并发已满',
-  UNKNOWN_MODEL: '模型不可用',
-  INVALID_MODEL_CONFIG: '模型参数未生效',
-  IMAGE_TOO_LARGE: '图片过大',
-  EMPTY_RESPONSE: '空响应',
-  DEGRADED_ROUTE: '自动重答',
-  DEGRADED_ROUTE_EXHAUSTED: '降智未恢复',
-  PROCESS_CLEANUP_FAILED: '进程未退出',
-  PLAN_REQUIRED: '套餐不含该模型',
-  PROVIDER_ERROR: '模型请求失败',
+  RATE_LIMIT: 'rate limited',
+  QUOTA: 'quota exhausted',
+  AUTH: 'not signed in',
+  CONTEXT_WINDOW_EXCEEDED: 'context overflow',
+  TIMEOUT: 'timed out',
+  TRANSPORT: 'connection lost',
+  SERVER: 'upstream error',
+  REFUSAL: 'refused',
+  MAX_SESSIONS: 'session cap',
+  UNKNOWN_MODEL: 'model unavailable',
+  INVALID_MODEL_CONFIG: 'model config rejected',
+  IMAGE_TOO_LARGE: 'image too large',
+  EMPTY_RESPONSE: 'empty response',
+  DEGRADED_ROUTE: 'auto re-answer',
+  DEGRADED_ROUTE_EXHAUSTED: 'degraded route',
+  PROCESS_CLEANUP_FAILED: 'process still running',
+  PLAN_REQUIRED: 'plan does not include this model',
+  PROVIDER_ERROR: 'model request failed',
 }
 
 /**
  * Prefix a message with its code's short label.
  * @param code - stable failure code.
  * @param message - provider or plugin message.
- * @returns `[频率限制] …`, or the message unchanged for unlabelled codes.
  */
 export function labeled(code: string, message: string): string {
   const label = FAILURE_LABELS[code]

@@ -9,7 +9,7 @@
  * @module dsh-llm-antigravity-acp/tool-bridge
  */
 
-import type { RequestMessage, ToolSchema } from '@deepseek-ai/dsh-llm'
+import type { RequestMessage, ToolSchema } from './host-types.ts'
 import type { AcpPermissionOutcome, AcpPermissionRequest, AcpSessionUpdate, AcpToolCallMeta } from './acp-process.ts'
 import { AWAIT_TOOL_NAME, CALL_TOOL_NAME } from './conversation.ts'
 import { AGENT_TOOL_PREFIX, MCP_SERVER_NAME } from './history.ts'

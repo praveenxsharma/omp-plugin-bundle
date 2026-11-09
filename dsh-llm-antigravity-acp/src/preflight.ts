@@ -165,11 +165,15 @@ export function assertSupportedAgyVersion(version: string, binary: string): void
 
 /**
  * Default isolated home.
- * @returns `$DSH_HOME/cache/antigravity-acp`, or `~/.dsh/cache/antigravity-acp`.
+ * @returns `$OMP_HOME/cache/antigravity-acp`, then `$DSH_HOME`, then `~/.omp/cache/antigravity-acp`.
  */
 export function defaultHome(): string {
-  const dshHome = process.env.DSH_HOME && process.env.DSH_HOME.length > 0 ? process.env.DSH_HOME : join(homedir(), '.dsh')
-  return join(dshHome, 'cache', 'antigravity-acp')
+  const ompHome = process.env.OMP_HOME && process.env.OMP_HOME.length > 0
+    ? process.env.OMP_HOME
+    : process.env.DSH_HOME && process.env.DSH_HOME.length > 0
+      ? process.env.DSH_HOME
+      : join(homedir(), '.omp')
+  return join(ompHome, 'cache', 'antigravity-acp')
 }
 
 /**

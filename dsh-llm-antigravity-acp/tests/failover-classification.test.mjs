@@ -195,7 +195,7 @@ test('a degraded route fails the step without cooling the account down or failin
     messages: [sys, user('u1', `GATEDCALL ${JSON.stringify(degradedText)}`)],
   }))
   assert.equal(textError.code, 'DEGRADED_ROUTE', 'the degraded answer reports the re-answer code')
-  assert.match(textError.message, /自动重答/, 'the caller is told this was an automatic re-answer')
+  assert.match(textError.message, /auto re-answer/, 'the caller is told this was an automatic re-answer')
   assert.doesNotMatch(textError.message, /No Antigravity account/)
   assert.deepEqual(cooldownsOf(runtime, 'a'), [], 'the account serving the degraded route stays usable')
   assert.deepEqual(cooldownsOf(runtime, 'b'), [], 'no healthy account is cooled down either')
@@ -220,7 +220,7 @@ test('a degraded route fails the step without cooling the account down or failin
   assert.equal(second.code, 'DEGRADED_ROUTE', 'the second gate degrade asks for one more re-answer')
   const third = await rejectionOf(request())
   assert.equal(third.code, 'DEGRADED_ROUTE_EXHAUSTED', 'the exhausted re-answer keeps its own documented code')
-  assert.match(third.message, /降智未恢复/, 'the caller sees the real cause, not a quota story')
+  assert.match(third.message, /degraded route/, 'the caller sees the real cause, not a quota story')
   assert.doesNotMatch(third.message, /No Antigravity account/)
   assert.deepEqual(cooldownsOf(runtime, 'a'), [], 'the abort parks nothing on the first account')
   assert.deepEqual(cooldownsOf(runtime, 'b'), [], 'the abort parks nothing on the second account')

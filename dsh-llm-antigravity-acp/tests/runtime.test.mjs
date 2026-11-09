@@ -7,14 +7,12 @@ import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { Context } from '@deepseek-ai/cordis'
 import { AntigravityRuntime, compactBridgeTool, DEFAULT_RELAY_AFTER_MS, MAX_EAGER_BRIDGE_TOOL_BYTES } from '../lib/runtime.js'
 import { AntigravityAdapter } from '../lib/adapter.js'
 import { Config } from '../lib/config.js'
 import { toTokenUsage } from '../lib/conversation.js'
 import { EMPTY_INPUT_CONTINUATION, LOCKED_REPLAY_BUDGET_BYTES } from '../lib/history.js'
 import { assertSupportedAgyVersion, checkUnlock, prepareHome, resolveAgyBinary, resolvePythonArgv, syncOAuthToken } from '../lib/preflight.js'
-import { AntigravityRemote, INVOCATIONS } from '../lib/remote.js'
 import {
   decodeGenMetadata, decodeStepMetadata,
   evaluateDegradeFingerprint, sessionDbPath,
@@ -94,7 +92,7 @@ test('single turn streams reasoning, text, exact usage, and the selected model a
   assert.match(textOf(chunks), /^echo:gemini-3\.8-flash:low:/)
   const usage = chunks.find(c => c.type === 'usage').usage
   assert.deepEqual(usage, { inputTokens: 600, outputTokens: 50, cacheReadTokens: 400, reasoningTokens: 20, totalTokens: 1050 })
-  assert.match(prompts()[0].system, /primary model of a DeepSeek Harness/)
+  assert.match(prompts()[0].system, /primary model of an OMP session/)
 })
 
 test('resolveModel declares the context window, three efforts, and in-history system updates', async () => {

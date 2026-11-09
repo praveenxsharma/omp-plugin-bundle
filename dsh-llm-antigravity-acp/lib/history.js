@@ -147,7 +147,7 @@ export function renderFullToolContracts(tools, maxEagerBytes) {
  */
 export function bridgeSystemPrompt(system, toolContracts) {
     const preamble = [
-        'You are the primary model of a DeepSeek Harness (DSH) session. The harness owns the conversation, the tools, and their permissions.',
+        'You are the primary model of an OMP session. OMP owns the conversation, the tools, and their permissions.',
         `Every harness tool is available to you under the prefix \`${AGENT_TOOL_PREFIX}\`: a tool named \`X\` in the instructions below is the tool \`${AGENT_TOOL_PREFIX}X\`. If \`${AGENT_TOOL_PREFIX}X\` is absent from your direct tool declarations, invoke it via \`${AGENT_TOOL_PREFIX}${CALL_TOOL_NAME}\` with \`{"name":"X","arguments":{...}}\`. Use only these tools; pass arguments exactly as their schemas define.`,
         'When the first user message contains a <dsh_history> block, it reproduces the earlier part of this conversation; continue from the newest input after it without repeating completed actions.',
     ].join('\n');
@@ -207,9 +207,11 @@ function renderBlocks(content) {
             case 'text':
                 parts.push(block.text);
                 break;
-            case 'image':
-                parts.push(`[image ${block.attachment.attachmentId}${block.offloaded === true ? ' (offloaded)' : ''}]`);
+            case 'image': {
+                const id = 'attachment' in block && block.attachment !== undefined ? block.attachment.attachmentId : 'inline';
+                parts.push(`[image ${id}${block.offloaded === true ? ' (offloaded)' : ''}]`);
                 break;
+            }
             case 'file':
                 parts.push(`[file ${block.attachment.attachmentId}]`);
                 break;
@@ -242,8 +244,10 @@ export async function promptBlocks(content, resolveImage) {
             const image = await resolveImage(block);
             if (image !== undefined)
                 blocks.push({ type: 'image', data: image.data, mimeType: image.mimeType });
-            else
-                blocks.push({ type: 'text', text: `[image ${block.attachment.attachmentId} unavailable]` });
+            else {
+                const id = 'attachment' in block && block.attachment !== undefined ? block.attachment.attachmentId : 'inline';
+                blocks.push({ type: 'text', text: `[image ${id} unavailable]` });
+            }
         }
         else {
             const text = renderBlocks([block]);

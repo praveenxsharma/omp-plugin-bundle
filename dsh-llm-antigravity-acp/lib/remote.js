@@ -1,15 +1,12 @@
 /**
- * Typert Remote service `antigravityAcp`: provider status, quota, warmup, live
- * configuration, and account administration for the Web client's settings card
- * and quota pill.
- * @module dsh-llm-antigravity-acp/remote
+ * Account administration facade used by tests and OMP slash commands.
+ * @module omp-antigravity-acp/remote
  */
-import { TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol';
 import { SYSTEM_ACCOUNT_LABEL } from "./accounts.js";
 import { asEffort } from "./config.js";
-/** Package name used for Typert descriptor identities. */
-export const PACKAGE_NAME = 'dsh-llm-antigravity-acp';
-/** Cordis service key and wire namespace. */
+/** Package name used for descriptor identities. */
+export const PACKAGE_NAME = 'omp-antigravity-acp';
+/** Service key. */
 export const SERVICE_NAME = 'antigravityAcp';
 function parseQuotaRequest(value) {
     if (value === undefined || value === null)
@@ -322,14 +319,15 @@ export const INVOCATIONS = [
     },
 ];
 /** Remote facade over the runtime. */
-export class AntigravityRemote extends TypertRemoteService {
+export class AntigravityRemote {
+    ctx;
     options;
     /**
-     * @param ctx - owning context.
+     * @param ctx - host context that may expose a settings writer via `get('settings')`.
      * @param options - runtime and settings namespace.
      */
     constructor(ctx, options) {
-        super(ctx, SERVICE_NAME);
+        this.ctx = ctx;
         this.options = options;
     }
     /**
@@ -374,7 +372,7 @@ export class AntigravityRemote extends TypertRemoteService {
     async configure(request) {
         const patch = parseConfigureRequest(request);
         const status = this.options.runtime.configure(patch);
-        const settings = this.ctx.get('settings');
+        const settings = this.ctx?.get?.('settings');
         if (settings?.writable === true && typeof settings.update === 'function') {
             const stored = { ...patch };
             if (patch.accounts !== undefined) {
@@ -428,22 +426,9 @@ export class AntigravityRemote extends TypertRemoteService {
     }
 }
 /**
- * Register the invocation descriptors with the Host Gateway when present.
- * @param ctx - plugin context.
+ * No-op on OMP: slash commands replace the DSH Host Gateway.
+ * @param _ctx - unused.
  */
-export function registerRemote(ctx) {
-    ctx.inject(['typert'], (scope) => {
-        scope.effect(() => {
-            const registrar = scope.get('typert');
-            if (registrar === undefined || typeof registrar.register !== 'function')
-                return () => undefined;
-            return registrar.register({
-                package: PACKAGE_NAME,
-                face: 'host',
-                schemas: [],
-                model: { services: [], events: [], objects: [] },
-                invocations: INVOCATIONS,
-            });
-        }, 'antigravity-acp: remote descriptors');
-    });
+export function registerRemote(_ctx) {
+    return;
 }

@@ -5,7 +5,7 @@
 // ignored rather than resurrected.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { Context } from '@deepseek-ai/cordis'
+
 import { AntigravityRemote, parseConfigureRequest, profileFromStatus, storedAccounts } from '../lib/remote.js'
 
 /** One account as a configure request spells it. */
@@ -141,9 +141,8 @@ const statusOf = (accounts) => ({
 
 /** A remote over a runtime stub that records the patch and echoes its list. */
 const mountRemote = (currentRows) => {
-  const ctx = new Context()
   const writes = []
-  ctx.provide('settings', { writable: true, update: async (_ns, values) => { writes.push(values) } })
+  const ctx = { get: (name) => name === 'settings' ? { writable: true, update: async (_ns, values) => { writes.push(values) } } : undefined }
   const patches = []
   const runtime = {
     accounts: () => currentRows,
