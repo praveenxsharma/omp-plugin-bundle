@@ -65,6 +65,7 @@ interface PartialAssistant {
     cacheWrite: number
     totalTokens: number
     reasoningTokens?: number
+    cost: { input: number; output: number; cacheRead: number; cacheWrite: number; total: number }
   }
   stopReason: 'stop' | 'length' | 'toolUse' | 'error' | 'aborted'
   errorMessage?: string
@@ -226,8 +227,10 @@ export function toGenerateOptions(
   }
 }
 
+const ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 }
+
 function emptyUsage(): PartialAssistant['usage'] {
-  return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, totalTokens: 0 }
+  return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, totalTokens: 0, cost: { ...ZERO_COST } }
 }
 
 function applyUsage(partial: PartialAssistant, usage: TokenUsage): void {
@@ -238,6 +241,7 @@ function applyUsage(partial: PartialAssistant, usage: TokenUsage): void {
     cacheWrite: usage.cacheWriteTokens ?? 0,
     totalTokens: usage.totalTokens,
     ...usage.reasoningTokens !== undefined ? { reasoningTokens: usage.reasoningTokens } : {},
+    cost: { ...ZERO_COST },
   }
 }
 
@@ -254,7 +258,7 @@ function snapshot(partial: PartialAssistant): Record<string, unknown> {
   return {
     ...partial,
     content: partial.content.map(block => ({ ...block })),
-    usage: { ...partial.usage },
+    usage: { ...partial.usage, cost: { ...partial.usage.cost } },
   }
 }
 
